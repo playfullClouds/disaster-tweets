@@ -2,5 +2,11 @@ pandas
 numpy
 seaborn
 ipykernel
+ensure==1.0.2
+emoji
+nltk
+autocorrect
+advertools
+bs4
 
 -e .
