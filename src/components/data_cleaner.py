@@ -30,6 +30,7 @@ class DataCleaningConfig:
     destination_dir: Path = os.path.join('artifacts', 'data_cleaner')
     input_file: str = 'tweets.csv'
     output_file: str = field(default='cleaned_data.csv')
+    # huggingface_model: str = field(default='bert-base-uncased')
     
 
 class DataCleaner:
@@ -76,17 +77,20 @@ class DataCleaner:
         """Removes emojis from the given text and returns a text without emojis."""
         log.info("Extracting and removing emoji starting")
         try:
-            extracted_emojis = adv.extract_emoji(text)
-            top_emojis = extracted_emojis['top_emoji']
-            log.info(f"Extracted emojis: {top_emojis}")
-            
-            emoji_pattern = emoji.get_emoji_regexp()
+            # Extract emoji list from the text
+            emoji_list = emoji.emoji_list(text)
+            extracted_emojis = [item['emoji'] for item in emoji_list]
+            log.info(f"Extracted emojis: {extracted_emojis}")
+
+            # Create a regex pattern to match the emojis
+            emoji_pattern = re.compile('|'.join(map(re.escape, extracted_emojis)))
             
             log.info("Extracting and removing emoji successfully")
             return emoji_pattern.sub(r'', text)
         
         except Exception as e:
             log.error("Error in extracting and removing emojis")
+            raise CustomException(e, sys)
             
     
     def clean(self, sentence: str) -> str:
@@ -101,14 +105,13 @@ class DataCleaner:
             
             sentence=str(sentence) #convert to strings series
             sentence = sentence.lower()  # lowercase everything 
-            sentence = BeautifulSoup(sentence, 'html.parser').get_text() #remove html tags
-            # sentence = self.extract_and_remove_emojis(sentence)  # Remove emojis
+            sentence = self.extract_and_remove_emojis(sentence)  # Remove emojis
             sentence = sentence.encode('ascii', 'ignore').decode() #encode ASCII characters
+            sentence = re.sub(r'^rt[\s]+', '', sentence) # Remove "RT" (retweet abbreviation)
+            sentence = re.sub(r'@\w+', '', sentence) # Remove mentions (@username)
+            sentence = re.sub(r'https?://\S+', '', sentence) # Remove URLs
             sentence = re.sub(r'\[.*?\]', '', sentence) # remove square brackets
             sentence = re.sub(r'<.*?>+', '', sentence) # remove angular brackets
-            sentence = re.sub(r"[.,!?€$&:;\-=/|()'...\"\@#_%]", '', sentence) # remove punctuation
-            sentence = re.sub(r'@([a-zA-Z0-9_]{1,50})', ' ', sentence) # remove @mentions
-            sentence = re.sub(r'^rt[\s]+', '', sentence) # remove RT (retweet abbreviation)
             sentence = re.sub(r'\d+', '', sentence) #remove numbers
             sentence = re.sub(r'\w*\d\w*', '', sentence) #remove words containing numbers
             sentence = sentence.strip() # remove leading and trailing white spaces
@@ -117,17 +120,18 @@ class DataCleaner:
             # correct sentence and filter out word with two letter or less
             sentence_corrected = ' '.join([self.spell(word) for word in sentence.split() if len(word) > 2]) 
 
-            
-            tokens = self.tt.tokenize(sentence_corrected) # tokenize with TweetTokenizer
+
+            tokens = self.tt.tokenizer(sentence_corrected) # tokenize with TweetTokenizer
             filtered_words = [w for w in tokens if not w in self.stop_words] # remove stopwords 
             
             # Apply stemming and lemmatization
             stem_words=[self.stemmer.stem(w) for w in filtered_words] #Stemming the words         
             lemma_words=[self.lemmatizer.lemmatize(w) for w in stem_words] #Lemmatization
             
+ 
             log.info("Main cleaning successful.")
-            
             return " ".join(lemma_words)
+        
         except Exception as e:
             log.error("Error in cleaning the sentence.")
             raise CustomException(e, sys)
@@ -158,9 +162,6 @@ class DataCleaner:
                 log.error(f"Found {missing_count} missing values in the 'tweet_text' column. Aborting the cleaning process.")
                 raise CustomException(f"Missing values detected in 'text' column: {missing_count}", sys)
             
-            # if 'tweet_text 'not in df.columns:
-            #     log.error("Input file does not contain a 'tweet_text' column")
-            #     raise CustomException(e, sys)
             
             if 'tweet_text' not in df.columns:
                 raise CustomException("Input file does not contain a 'tweet_text' column", sys)

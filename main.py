@@ -24,13 +24,13 @@ except Exception as e:
     
     
     
-STAGE_NAME = "Data Cleaning"
-try:
-    log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
-    cleaner = DataCleaner()
-    cleaner.clean_file()
-    log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
-except Exception as e:
-        log.exception(f"Exception occurred during {STAGE_NAME}")
-        raise CustomException(e, sys)
+# STAGE_NAME = "Data Cleaning"
+# try:
+#     log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
+#     cleaner = DataCleaner()
+#     cleaner.clean_file()
+#     log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+# except Exception as e:
+#         log.exception(f"Exception occurred during {STAGE_NAME}")
+#         raise CustomException(e, sys)
     
