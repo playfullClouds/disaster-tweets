@@ -12,10 +12,10 @@ from src.utils import unzip_data, download_file
 
 @dataclass
 class DataIngestionConfig:
-    base_dir: Path = os.path.join('artifacts', 'data_ingestion')
+    base_dir: str = os.path.join('artifacts', 'data_ingestion')
     source_url: str = "https://github.com/xplict33/mlproject/raw/main/data.zip"
     zip_dir: str = os.path.join(base_dir, 'data.zip')
-    extracted_dir: Path = os.path.join(base_dir, 'data')
+    extracted_dir: str = os.path.join(base_dir, 'data')
 
 
 class DataIngestion:

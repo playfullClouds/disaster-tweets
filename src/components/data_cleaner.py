@@ -3,7 +3,6 @@ import os
 import sys
 import nltk
 import emoji
-import string
 import pandas as pd
 import advertools as adv
 
@@ -17,7 +16,6 @@ from nltk.stem.wordnet import WordNetLemmatizer
 nltk.download('all', quiet=True)
 
 
-from pathlib import Path
 from src.logger import log
 from dataclasses import dataclass, field
 from src.exception import CustomException
@@ -26,11 +24,10 @@ from src.exception import CustomException
 
 @dataclass
 class DataCleaningConfig:
-    source_dir: Path = os.path.join('artifacts', 'data_ingestion')
-    destination_dir: Path = os.path.join('artifacts', 'data_cleaner')
+    source_dir: str = os.path.join('artifacts', 'data_ingestion')
+    destination_dir: str = os.path.join('artifacts', 'data_cleaner')
     input_file: str = 'tweets.csv'
     output_file: str = field(default='cleaned_data.csv')
-    # huggingface_model: str = field(default='bert-base-uncased')
     
 
 class DataCleaner:
@@ -67,11 +64,6 @@ class DataCleaner:
             log.error("Failed to initialize NLP tools and stopwords")
             raise CustomException(e, sys)
         
-    # def remove_emoji(self, text: str) -> str:
-    #     """Removes emojis from the given that using the emoji module"""
-    #     emoji_pattern = emoji.get_emoji_regexp()
-    #     return emoji_pattern.sub(r'', text)
-    
     
     def extract_and_remove_emojis(self, text: str) -> str:
         """Removes emojis from the given text and returns a text without emojis."""

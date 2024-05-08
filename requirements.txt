@@ -9,5 +9,7 @@ autocorrect
 advertools
 bs4
 transformers
+scikit-learn
+joblib
 
 -e .
