@@ -11,5 +11,7 @@ bs4
 transformers
 scikit-learn
 joblib
+xgboost
+catboost
 
 -e .

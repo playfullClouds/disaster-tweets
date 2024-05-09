@@ -30,7 +30,6 @@ class DataTransformer:
         self.config = DataTransformationConfig()
         
         try:
-            # Create only the base directory since the zip file path is part of this directory.
             os.makedirs(self.config.destination_dir, exist_ok=True)
             log.info(f"Created directory {self.config.destination_dir}")
             self.vectorizer = TfidfVectorizer(

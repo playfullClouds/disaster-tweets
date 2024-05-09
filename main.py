@@ -8,6 +8,7 @@ from src.exception import CustomException
 from src.components.data_ingestion import DataIngestion
 from src.components.data_cleaner import DataCleaner
 from src.components.data_transformation import DataTransformer
+from src.components.model_trainer import ModelTrainer
 
 
 
@@ -45,3 +46,16 @@ try:
 except Exception as e:
         log.exception(f"Exception occurred during {STAGE_NAME}")
         raise CustomException(e, sys)
+    
+    
+    
+STAGE_NAME = "Model Trainer"
+try:
+    log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
+    trainer = ModelTrainer()
+    trainer.cross_validate_and_evaluate()
+    log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+except Exception as e:
+        log.exception(f"Exception occurred during {STAGE_NAME}")
+        raise CustomException(e, sys)
+
