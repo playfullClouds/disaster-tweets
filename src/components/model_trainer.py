@@ -8,7 +8,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import cross_val_score, cross_validate
 
-from sklearn.svm import SVC
+# from sklearn.svm import SVC
 from xgboost import XGBClassifier
 from catboost import CatBoostClassifier
 from sklearn.naive_bayes import MultinomialNB

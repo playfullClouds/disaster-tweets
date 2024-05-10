@@ -1,5 +1,6 @@
 import os
 import sys
+import dill
 import zipfile
 import traceback
 import urllib.request as request
@@ -68,3 +69,13 @@ def download_file(source_url: str, zip_dir: str):
     else:
         log.info(f"file already exists of sie: {get_size(Path(zip_dir))}")
         
+        
+        
+def load_object(file_path):
+    
+    try:
+        with open(file_path, "rb") as file_obj:
+            return dill.load(file_obj)
+        
+    except Exception as e:
+        raise CustomException(e, sys)

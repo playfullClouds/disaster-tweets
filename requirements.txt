@@ -5,6 +5,7 @@ ipykernel
 ensure==1.0.2
 emoji
 nltk
+dill
 autocorrect
 advertools
 bs4
@@ -13,5 +14,7 @@ scikit-learn
 joblib
 xgboost
 catboost
+Flask
+
 
 -e .
