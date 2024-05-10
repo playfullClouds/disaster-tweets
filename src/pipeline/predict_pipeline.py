@@ -1,11 +1,11 @@
 import os
 import sys
-import panda as pd
+import pandas as pd
 
 
 from src.logger import log
 from src.utils import load_object
-from src.exceptions import CustomException
+from src.exception import CustomException
 
 
 class PredictPipeline:

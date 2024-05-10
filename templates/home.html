@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Classify Tweets - Disaster Tweet Classifier</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Classify a Tweet for Disaster Response</h1>
+        <p>Enter a tweet below to determine whether it is informative or not:</p>
+        <div class="form-container">
+            <form action="/predictdata" method="post">
+                <label for="tweet_text">Tweet Text:</label>
+                <textarea id="tweet_text" name="tweet_text" rows="4" cols="50" placeholder="Enter tweet text here..."></textarea>
+                <input type="submit" value="Classify">
+            </form>
+        </div>
+        <a href="/" class="button">Back to Home</a>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Classification Result - Disaster Tweet Classifier</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Tweet Classification Result</h1>
+        <div class="result-card">
+            <p>The tweet is classified as: <strong>{{ results }}</strong></p>
+        </div>
+        <a href="/predict" class="button">Classify Another Tweet</a>
+        <a href="/" class="button">Back to Home</a>
+    </div>
+</body>
+</html>
+
+
