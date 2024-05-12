@@ -72,12 +72,23 @@ def download_file(source_url: str, zip_dir: str):
         
         
         
-def load_object(file_path):
+# def load_object(file_path):
     
-    try:
-        with open(file_path, "rb") as file_obj:
-            # return dill.load(file_obj)
-            return joblib.load(file_obj)
+#     try:
+#         with open(file_path, "rb") as file_obj:
+#             # return dill.load(file_obj)
+#             return joblib.load(file_obj)
         
+#     except Exception as e:
+#         raise CustomException(e, sys)
+
+
+def load_object(file_path):
+    try:
+        log.info(f"Loading object from file: {file_path}")
+        with open(file_path, "rb") as file_obj:
+            return joblib.load(file_obj)
     except Exception as e:
+        log.error(f"Error loading object from file: {e}")
+        log.error(traceback.format_exc())  # Print the full traceback for debugging
         raise CustomException(e, sys)
