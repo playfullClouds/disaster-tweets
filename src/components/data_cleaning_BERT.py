@@ -1,19 +1,17 @@
-import re
 import os
+import re
 import sys
 import nltk
-import emoji
 import pandas as pd
-import advertools as adv
 
 
-from bs4 import BeautifulSoup
-from autocorrect import Speller
 from nltk.corpus import stopwords
-from nltk.tokenize import TweetTokenizer
+from transformers import BertTokenizer
 from nltk.stem.porter import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
-nltk.download('all', quiet=True)
+
+nltk.download('stopwords', quiet=True)
+nltk.download('wordnet', quiet=True)
 
 
 from src.logger import log
@@ -27,14 +25,14 @@ class DataCleaningConfig:
     source_dir: str = os.path.join('artifacts', 'data_ingestion')
     destination_dir: str = os.path.join('artifacts', 'data_cleaner')
     input_file: str = 'tweets.csv'
-    output_file: str = field(default='cleaned_data.csv')
+    output_file: str = field(default='cleaned_data_BERT.csv')
     
-
+    
 class DataCleaner:
     def __init__(self) -> None:
         log.info("Initializing DataCleaner")
         self.config = DataCleaningConfig()
-
+        
         try:
             # Create only the base directory since the zip file path is part of this directory.
             os.makedirs(self.config.destination_dir, exist_ok=True)
@@ -46,46 +44,19 @@ class DataCleaner:
             raise CustomException
         
         # Initialize NLP tools and stopwords
-        log.info("Initializing NLP tools and stopwords")
+        log.info("Initializing DataCleaner")
         try:
-            self.lemmatizer = WordNetLemmatizer()
+            self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+            self.stop_words = set(stopwords.words('english'))
             self.stemmer = PorterStemmer()
-            self.tt = TweetTokenizer()
-            self.spell = Speller(lang='en')
-            
-            # Extend stopwords with custom words
-            self.stop_words = stopwords.words('english')
-            self.stop_words.extend([
-                'rt', 'via', '...', 'u', 'im', 'ur', 'rt', 'https', 'co', 'amp', 'rt', 
-                '@', 'url', '—', '•', '➡', 'http?', 'https?', '…', '️', '🙏', '❤️'
-            ])
-            log.info("NLP tools and stopwords initialized successfully")
+            self.lemmatizer = WordNetLemmatizer()
+            log.info("Data cleaning setup completed")
         except Exception as e:
-            log.error("Failed to initialize NLP tools and stopwords")
-            raise CustomException(e, sys)
+            log.error("Failed to set up the data cleaning directories.")
+            raise CustomException
         
     
-    def extract_and_remove_emojis(self, text: str) -> str:
-        """Removes emojis from the given text and returns a text without emojis."""
-        log.info("Extracting and removing emoji starting")
-        try:
-            # Extract emoji list from the text
-            emoji_list = emoji.emoji_list(text)
-            extracted_emojis = [item['emoji'] for item in emoji_list]
-            log.info(f"Extracted emojis: {extracted_emojis}")
-
-            # Create a regex pattern to match the emojis
-            emoji_pattern = re.compile('|'.join(map(re.escape, extracted_emojis)))
-            
-            log.info("Extracting and removing emoji successfully")
-            return emoji_pattern.sub(r'', text)
-        
-        except Exception as e:
-            log.error("Error in extracting and removing emojis")
-            raise CustomException(e, sys)
-            
-    
-    def clean(self, sentence: str) -> str:
+    def clean(self, sentence):
         """Cleans a single sentence by removing unwanted tokens and applying normalization."""
         log.info("Main cleaning starting")
         try:
@@ -97,8 +68,6 @@ class DataCleaner:
             
             sentence=str(sentence) #convert to strings series
             sentence = sentence.lower()  # lowercase everything 
-            sentence = self.extract_and_remove_emojis(sentence)  # Remove emojis
-            sentence = sentence.encode('ascii', 'ignore').decode() #encode ASCII characters
             sentence = re.sub(r'^rt[\s]+', '', sentence) # Remove "RT" (retweet abbreviation)
             sentence = re.sub(r'@\w+', '', sentence) # Remove mentions (@username)
             sentence = re.sub(r'https?://\S+', '', sentence) # Remove URLs
@@ -106,29 +75,27 @@ class DataCleaner:
             sentence = re.sub(r'<.*?>+', '', sentence) # remove angular brackets
             sentence = re.sub(r'\d+', '', sentence) #remove numbers
             sentence = re.sub(r'\w*\d\w*', '', sentence) #remove words containing numbers
+            sentence = re.sub(r'\b(\w)\b', '', sentence)  # Remove single characters
+            
+            # Remove special characters and hashtags
+            sentence = re.sub(r'[^a-zA-Z0-9\s]', '', sentence)
+            sentence = re.sub(r'#', '', sentence)
+            
             sentence = sentence.strip() # remove leading and trailing white spaces
 
-
-            # correct sentence and filter out word with two letter or less
-            sentence_corrected = ' '.join([self.spell(word) for word in sentence.split() if len(word) > 2]) 
-
-
-            tokens = self.tt.tokenizer(sentence_corrected) # tokenize with TweetTokenizer
-            filtered_words = [w for w in tokens if not w in self.stop_words] # remove stopwords 
             
-            # Apply stemming and lemmatization
-            stem_words=[self.stemmer.stem(w) for w in filtered_words] #Stemming the words         
-            lemma_words=[self.lemmatizer.lemmatize(w) for w in stem_words] #Lemmatization
+            # Tokenize sentence for BERT
+            tokens = self.tokenizer.tokenize(sentence)
+            sentence = ' '.join(tokens)
             
- 
             log.info("Main cleaning successful.")
-            return " ".join(lemma_words)
-        
+            return sentence
+            
         except Exception as e:
             log.error("Error in cleaning the sentence.")
             raise CustomException(e, sys)
         
-    
+        
     def clean_file(self) -> None:
         """Cleans an input file and writes the cleaned text to an output file."""
         log.info("Main cleaning starting")
@@ -171,33 +138,3 @@ class DataCleaner:
         except Exception as e:
             log.error(f"Error occurred while cleaning data from {input_filepath} to {output_filepath}")
             raise CustomException(e, sys)
-    
-    
-    
-
-
-# stk = stopwords.words('english')
-# len(stk)
-
-
-# # add words to stopwords
-
-# stk.extend([
-#     'rt', 'via', '...', 'u', 'im', 'ur', 'u\'re', 'c', 'b', 'don',
-#     'amp', 'RT', '@', 'rt', 'http', 'https', 'co', 'now', 'should', 'just',
-#     'rts', 'retweet', 'retweets', '…', '️', 'cc' ,'a', 'an', 'the', 'and', 'or', 
-#     'but', 'if', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 
-#     'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 
-#     'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 
-#     'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where',
-#     'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 
-#     'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's',
-#     't', 'can', 'will', 'rt', 'via', '’', '‘', '“', '”', '–', '—', '•', '➡', 'http?', 'https?',
-#     '➡️', '⬅', '⬅️', '👉', '👇', '👍', '🙏', '❤️', '🔥',  'u', '2', '4', 'im', 'ur',
-#     'AT_USER', 'URL',  '’s', '...!', '...?', '&amp;', 'amp;', 'amp', '✈️', '✡', '✨', '❤', 
-#     '||', '|'
-
-
-# ])
-
-
