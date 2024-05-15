@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 =======
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -166,4 +166,7 @@ cython_debug/
 # artifacts/
 # artifacts/*
 # artifacts/model_trainer/model.zip
->>>>>>> parent of 3dab3f8 (Model Trainer BERT Completed)
+
+
+ 
+
