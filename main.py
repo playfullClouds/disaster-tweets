@@ -5,53 +5,49 @@ from src.logger import log
 from src.exception import CustomException
 
 
-# from src.components.data_ingestion import DataIngestion
-# from src.components.data_cleaner import DataCleaner
-# from src.components.data_transformation import DataTransformer
-# from src.components.model_trainer import ModelTrainer
-# from src.components.model_optimizer import ModelOptimizer
-
-
 from src.components.data_ingestion import DataIngestion
 from src.components.data_cleaning_BERT import DataCleaner
-from src.components.data_transformation_BERT import DataTransformer
+# from src.components.data_cleaner import DataCleaner
+from src.components.data_transformation import DataTransformer
+from src.components.model_trainer import ModelTrainer
+from src.components.model_optimizer import ModelOptimizer
 
 
 
-# STAGE_NAME = "Data Ingestion"
-# try:
-#    log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
-#    ingestion = DataIngestion()
-#    extracted_dir = ingestion.initiate_ingestion()
-# #    ingestion.execute_data_ingestion()
-#    log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
-# except Exception as e:
-#         log.exception(f"Exception occurred during {STAGE_NAME}")
-#         raise CustomException(e, sys)
+STAGE_NAME = "Data Ingestion"
+try:
+   log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
+   ingestion = DataIngestion()
+   extracted_dir = ingestion.initiate_ingestion()
+#    ingestion.execute_data_ingestion()
+   log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+except Exception as e:
+        log.exception(f"Exception occurred during {STAGE_NAME}")
+        raise CustomException(e, sys)
     
     
     
-# STAGE_NAME = "Data Cleaning"
-# try:
-#     log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
-#     cleaner = DataCleaner()
-#     cleaner.clean_file()
-#     log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
-# except Exception as e:
-#         log.exception(f"Exception occurred during {STAGE_NAME}")
-#         raise CustomException(e, sys)
-
-
-
-STAGE_NAME = "Data Transformation"
+STAGE_NAME = "Data Cleaning"
 try:
     log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
-    transformer = DataTransformer()
-    transformer.transform_data()
+    cleaner = DataCleaner()
+    cleaner.clean_file()
     log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
 except Exception as e:
         log.exception(f"Exception occurred during {STAGE_NAME}")
         raise CustomException(e, sys)
+
+
+
+# STAGE_NAME = "Data Transformation"
+# try:
+#     log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
+#     transformer = DataTransformer()
+#     transformer.transform_data()
+#     log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+# except Exception as e:
+#         log.exception(f"Exception occurred during {STAGE_NAME}")
+#         raise CustomException(e, sys)
     
     
     
