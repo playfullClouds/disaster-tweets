@@ -164,3 +164,4 @@ cython_debug/
 # artifacts/
 # artifacts/*
 artifacts/model_trainer/model.zip
+artifacts/model_trainer/pytorch_model.bin
