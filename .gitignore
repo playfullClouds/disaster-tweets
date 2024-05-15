@@ -163,3 +163,4 @@ cython_debug/
 
 # artifacts/
 # artifacts/*
+artifacts/model_trainer/model.zip
