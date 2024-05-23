@@ -16,7 +16,10 @@ xgboost
 catboost
 Flask
 transformers
-torch
+# torch
+tensorflow
+tf-keras
+imbalanced-learn
 
 
 # -e .

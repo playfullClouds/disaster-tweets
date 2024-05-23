@@ -132,7 +132,7 @@ class ModelTrainer:
             log.info(f'Test Metrics: {test_metrics}')
 
             # Save the trained model
-            model_save_dir = os.path.join(self.config.destination_dir, 'model')
+            model_save_dir = os.path.join(self.config.destination_dir)
             self.model.save_pretrained(model_save_dir)
 
             # Rename the files to correct extensions
