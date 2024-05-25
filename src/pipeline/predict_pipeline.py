@@ -11,10 +11,12 @@ from src.exception import CustomException
 class PredictPipeline:
     def __init__(self):
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        
         # Paths to the saved model and vectorizer
-        # self.model_path = os.path.join(BASE_DIR, 'artifacts', 'model_trainer', 'best_model.pkl')
-        self.model_path = os.path.join(BASE_DIR, 'artifacts', 'model_optimizer', 'optimized_model.pkl')
-        self.preprocessor_path = os.path.join(BASE_DIR, 'artifacts', 'data_transformation', 'tfidf_vectorizer.pkl')
+        # self.model_path = os.path.join(BASE_DIR, 'artifacts', 'model_trainer', 'best_model_SMOTE.pkl')
+        self.model_path = os.path.join(BASE_DIR, 'artifacts', 'model_optimizer', 'optimized_model_SMOTE.pkl')
+        # self.model_path = os.path.join(BASE_DIR, 'artifacts', 'model_trainer', 'best_model_SMOTE.pkl')
+        self.preprocessor_path = os.path.join(BASE_DIR, 'artifacts', 'data_transformation', 'tfidf_vectorizer_SMOTE.pkl')
         
         
     def predict(self, text_data):
