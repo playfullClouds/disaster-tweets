@@ -14,7 +14,7 @@ from src.exception import CustomException
 @dataclass
 class DataTransformationConfig:
     source_dir: str = os.path.join('artifacts', 'data_cleaner', 'cleaned_data_BERT.csv')
-    destination_dir: str = os.path.join('artifacts', 'data_transformation', 'new')
+    destination_dir: str = os.path.join('artifacts', 'data_transformation', 'BERT_SMOTE')
     output_file_train: str = os.path.join(destination_dir, 'train_data.tfrecord')
     output_file_val: str = os.path.join(destination_dir, 'val_data.tfrecord')
     output_file_test: str = os.path.join(destination_dir, 'test_data.tfrecord')

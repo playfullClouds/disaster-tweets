@@ -19,7 +19,9 @@ class PredictPipeline:
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         
         # Paths to the saved model dir
-        self.model_dir = os.path.join(BASE_DIR, 'artifacts', 'model_trainer', 'bert_model')
+        # self.model_dir = os.path.join(BASE_DIR, 'artifacts', 'model_trainer', 'bert_model')
+        self.model_dir = os.path.join(BASE_DIR, 'artifacts', 'model_optimizer', 'optuna_model')
+        
         
         # # Set HF_HOME environment variable
         # os.environ["HF_HOME"] = os.path.join(BASE_DIR, "artifacts", "model_trainer", "cache")

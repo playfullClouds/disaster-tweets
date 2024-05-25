@@ -11,7 +11,7 @@ from src.exception import CustomException
 # from src.components.data_transformation_SMOTE import DataTransformer
 # from src.components.model_trainer import ModelTrainer
 # from src.components.model_optimizer import ModelOptimizer
-from src.components.model_optimizer_SMOTE import ModelOptimizer
+# from src.components.model_optimizer_SMOTE import ModelOptimizer
 
 
 
@@ -22,7 +22,7 @@ from src.components.model_optimizer_SMOTE import ModelOptimizer
 # from src.components.data_cleaning_BERT import DataCleaner
 # from src.components.data_transformation_BERT_tf import DataTransformer
 # from src.components.model_trainer_BERT_tf2 import ModelTrainer
-
+# from src.components.model_optimizer_BERT_optuna import ModelOptimizer
 
 
 # STAGE_NAME = "Data Ingestion"
@@ -145,13 +145,25 @@ from src.components.model_optimizer_SMOTE import ModelOptimizer
 
 
 
-STAGE_NAME = "Model Optimization SMOTE"
-try:
-    log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
-    optimizer = ModelOptimizer()
-    optimizer.run()
-    log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
-except Exception as e:
-        log.exception(f"Exception occurred during {STAGE_NAME}")
-        raise CustomException(e, sys)
+# STAGE_NAME = "Model Optimization SMOTE"
+# try:
+#     log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
+#     optimizer = ModelOptimizer()
+#     optimizer.run()
+#     log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+# except Exception as e:
+#         log.exception(f"Exception occurred during {STAGE_NAME}")
+#         raise CustomException(e, sys)
+    
+    
+    
+# STAGE_NAME = "Model Optimization BERT OPTUNA"
+# try:
+#     log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
+#     optimizer = ModelOptimizer()
+#     optimizer.train()
+#     log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+# except Exception as e:
+#         log.exception(f"Exception occurred during {STAGE_NAME}")
+#         raise CustomException(e, sys)
 

@@ -20,6 +20,7 @@ transformers
 tensorflow
 tf-keras
 imbalanced-learn
+optuna
 
 
 # -e .

@@ -9,17 +9,17 @@ from transformers import TFBertForSequenceClassification, BertTokenizer
 
 
 from src.logger import log
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from src.exception import CustomException
 
 
 
 @dataclass
 class ModelTrainingConfig:
-    train_data_path: str = os.path.join('artifacts', 'data_transformation', 'new', 'train_data.tfrecord')
-    val_data_path: str = os.path.join('artifacts', 'data_transformation', 'new', 'val_data.tfrecord')
-    test_data_path: str = os.path.join('artifacts', 'data_transformation', 'new', 'test_data.tfrecord')
-    model_save_path: str = os.path.join('artifacts', 'model', 'bert_model')
+    train_data_path: str = os.path.join('artifacts', 'data_transformation', 'BERT_SMOTE', 'train_data.tfrecord')
+    val_data_path: str = os.path.join('artifacts', 'data_transformation', 'BERT_SMOTE', 'val_data.tfrecord')
+    test_data_path: str = os.path.join('artifacts', 'data_transformation', 'BERT_SMOTE', 'test_data.tfrecord')
+    model_save_path: str = os.path.join('artifacts', 'model_trainer', 'bert_model')
     max_length: int = 128
     batch_size: int = 16
     epochs: int = 3
