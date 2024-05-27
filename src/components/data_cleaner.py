@@ -113,7 +113,7 @@ class DataCleaner:
             sentence_corrected = ' '.join([self.spell(word) for word in sentence.split() if len(word) > 2]) 
 
 
-            tokens = self.tt.tokenizer(sentence_corrected) # tokenize with TweetTokenizer
+            tokens = self.tt.tokenize(sentence_corrected) # tokenize with TweetTokenizer
             filtered_words = [w for w in tokens if not w in self.stop_words] # remove stopwords 
             
             # Apply stemming and lemmatization

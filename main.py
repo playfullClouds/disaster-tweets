@@ -6,7 +6,7 @@ from src.exception import CustomException
 
 
 # from src.components.data_ingestion import DataIngestion
-# # from src.components.data_cleaner import DataCleaner
+# from src.components.data_cleaner import DataCleaner
 # from src.components.data_transformation import DataTransformer
 # from src.components.data_transformation_SMOTE import DataTransformer
 # from src.components.model_trainer import ModelTrainer
@@ -15,7 +15,7 @@ from src.exception import CustomException
 
 
 
-# from src.components.data_cleaning_BERT import DataCleaner
+from src.components.data_cleaning_BERT import DataCleaner
 # from src.components.data_transformation_BERT import DataTransformer
 # from src.components.model_trainer_BERT import ModelTrainer
 
@@ -50,15 +50,15 @@ from src.exception import CustomException
 
 
 
-# STAGE_NAME = "Data Cleaning BERT"
-# try:
-#     log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
-#     cleaner = DataCleaner()
-#     cleaner.clean_file()
-#     log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
-# except Exception as e:
-#         log.exception(f"Exception occurred during {STAGE_NAME}")
-#         raise CustomException(e, sys)
+STAGE_NAME = "Data Cleaning BERT"
+try:
+    log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
+    cleaner = DataCleaner()
+    cleaner.clean_file()
+    log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+except Exception as e:
+        log.exception(f"Exception occurred during {STAGE_NAME}")
+        raise CustomException(e, sys)
 
 
 # STAGE_NAME = "Data Transformation"
