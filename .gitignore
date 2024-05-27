@@ -126,8 +126,8 @@ celerybeat.pid
 .venv
 env/
 venv/
-dis/*
-dis/
+# dis/*
+/dis/
 ENV/
 env.bak/
 venv.bak/
@@ -163,10 +163,9 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# artifacts/
+/artifacts/
 # artifacts/*
-artifacts/model_trainer/model.zip
-artifacts/model_trainer/pytorch_model.bin
+
 
 
  
