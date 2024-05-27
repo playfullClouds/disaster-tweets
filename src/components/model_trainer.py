@@ -35,10 +35,10 @@ from src.exception import CustomException
 class ModelTrainerConfig:
     base_dir: str = os.path.join('artifacts', 'data_transformation')
     destination_dir: str = os.path.join('artifacts', 'model_trainer')
-    train_data: str = os.path.join(base_dir, 'train.csv')
-    test_data: str = os.path.join(base_dir, 'test.csv')
-    val_data: str = os.path.join(base_dir, 'val.csv')
-    best_model_path: str = os.path.join(destination_dir, 'best_model.pkl')
+    train_data: str = os.path.join(base_dir, 'train_SMOTE.csv')
+    test_data: str = os.path.join(base_dir, 'test_SMOTE.csv')
+    val_data: str = os.path.join(base_dir, 'val_SMOTE.csv')
+    best_model_path: str = os.path.join(destination_dir, 'best_model_SMOTE.pkl')
     
     
 class ModelTrainer:
@@ -89,7 +89,7 @@ class ModelTrainer:
             }
 
             best_model = None
-            best_f1_test = 0
+            smallest_f1_gap = float('inf')
             best_model_name = ""
 
             # Use F1-score as the scoring metric for cross-validation
@@ -153,8 +153,9 @@ class ModelTrainer:
                 # Determine the F1-score gap between training and test data
                 f1_gap = abs(f1_train - f1_test)
 
-                # Select the model based on test F1-score and a gap of less than 0.06
-                if f1_gap < 0.06 and f1_test > best_f1_test:
+                # Select the model based on the smallest F1-score gap between training and test data
+                if f1_gap <= 0.05 and f1_gap < smallest_f1_gap and f1_test >= 0.6:
+                    smallest_f1_gap = f1_gap
                     best_f1_test = f1_test
                     best_model = model
                     best_model_name = name

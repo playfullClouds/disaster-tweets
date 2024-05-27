@@ -34,25 +34,25 @@ class DataCleaner:
         self.config = DataCleaningConfig()
         
         try:
-            # Create only the base directory since the zip file path is part of this directory.
+            
             os.makedirs(self.config.destination_dir, exist_ok=True)
             log.info(f"Created directory {self.config.destination_dir}")
 
             log.info("Data Cleaning directory setup completed")
         except Exception as e:
             log.error("Failed to set up the data cleaning directories.")
-            raise CustomException
+            raise CustomException(e, sys)
         
         # Initialize NLP tools and stopwords
-        log.info("Initializing DataCleaner")
+        log.info("Setting up NLP tools for DataCleaner")
         try:
             self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
             self.stop_words = set(stopwords.words('english'))
             self.stemmer = PorterStemmer()
             self.lemmatizer = WordNetLemmatizer()
-            log.info("Data cleaning setup completed")
+            log.info("NLP tools setup completed")
         except Exception as e:
-            log.error("Failed to set up the data cleaning directories.")
+            log.error("Failed to set up the NLP tools.")
             raise CustomException
         
     
@@ -83,7 +83,6 @@ class DataCleaner:
             
             sentence = sentence.strip() # remove leading and trailing white spaces
 
-            
             # Tokenize sentence for BERT
             tokens = self.tokenizer.tokenize(sentence)
             sentence = ' '.join(tokens)
@@ -98,13 +97,14 @@ class DataCleaner:
         
     def clean_file(self) -> None:
         """Cleans an input file and writes the cleaned text to an output file."""
-        log.info("Main cleaning starting")
+        log.info("Starting file cleaning process")
         try:
             input_filepath = os.path.join(self.config.source_dir, self.config.input_file)
             output_filepath = os.path.join(self.config.destination_dir, self.config.output_file)
             
             df = pd.read_csv(input_filepath)
             log.info(f"Loaded data from {input_filepath}")
+            log.info(f"Initial DataFrame shape: {df.shape}")
             
             # Remove columns 'image_damage' and 'image_damage_conf' if they exist
             columns_to_drop = ['image_damage', 'image_damage_conf']
@@ -129,11 +129,13 @@ class DataCleaner:
             # Apply the cleaning function to the tweet text column
             df['cleanText'] = df['tweet_text'].apply(self.clean)
             
+            log.info(f"Cleaned DataFrame shape: {df.shape}")
+            
             # Write cleaned data to the output file
             df.to_csv(output_filepath, index=False)
             log.info(f"Cleaned data written to {output_filepath}")
             
-            log.info("Main cleaning successful.")
+            log.info("File cleaning process successful.")
                     
         except Exception as e:
             log.error(f"Error occurred while cleaning data from {input_filepath} to {output_filepath}")
