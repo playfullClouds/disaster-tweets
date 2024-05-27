@@ -26,7 +26,7 @@ class DataTransformationConfig:
     
     
 
-class DataTransformer:
+class DataTransformerSMOTE:
     def __init__(self) -> None:
         """Initialize DataTransformer and set up configuration."""
         log.info("Initializing DataTransformer")

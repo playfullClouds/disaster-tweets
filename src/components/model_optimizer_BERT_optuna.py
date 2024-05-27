@@ -27,7 +27,7 @@ class ModelOptimizerConfig:
     optuna_trials: int = 10  
     
     
-class ModelOptimizer:
+class ModelOptimizerOptuna:
     def __init__(self) -> None:
         log.info("Initializing ModelTrainer")
         self.config = ModelOptimizerConfig()

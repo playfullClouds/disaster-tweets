@@ -42,7 +42,7 @@ class ModelOptimizerConfig:
     optimized_model_path: str = os.path.join(destination_dir, 'optimized_model_SMOTE.pkl')
 
 
-class ModelOptimizer:
+class ModelOptimizerSMOTE:
     def __init__(self) -> None:
         """Initialize ModelOptimizer and setup configuration"""
         log.info("Initializing ModelOptimizer")

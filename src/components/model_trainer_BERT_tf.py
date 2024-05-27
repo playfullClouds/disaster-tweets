@@ -27,7 +27,7 @@ class ModelTrainingConfig:
     
     
     
-class ModelTrainer:
+class ModelTrainerPlainBERT:
     def __init__(self) -> None:
         log.info("Initializing ModelTrainer")
         self.config = ModelTrainingConfig()
@@ -49,6 +49,7 @@ class ModelTrainer:
             log.error("Failed to set up the BERT model and tokenizer.")
             raise CustomException(e, sys)
 
+
     def _parse_tfrecord(self, example_proto):
         feature_description = {
             'input_ids': tf.io.FixedLenFeature([self.config.max_length], tf.int64),
@@ -56,6 +57,7 @@ class ModelTrainer:
             'target': tf.io.FixedLenFeature([], tf.int64),
         }
         return tf.io.parse_single_example(example_proto, feature_description)
+
 
     def _load_dataset(self, filepath):
         dataset = tf.data.TFRecordDataset(filepath)
@@ -70,8 +72,10 @@ class ModelTrainer:
         dataset = dataset.shuffle(1000).batch(self.config.batch_size).prefetch(tf.data.AUTOTUNE)
         return dataset
 
+
     def _compute_f1_score(self, y_true, y_pred):
         return f1_score(y_true, y_pred, average='weighted')
+
 
     def train(self) -> None:
         log.info("Starting model training process")
