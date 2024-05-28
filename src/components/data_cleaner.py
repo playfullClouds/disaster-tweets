@@ -4,10 +4,8 @@ import sys
 import nltk
 import emoji
 import pandas as pd
-import advertools as adv
 
 
-from bs4 import BeautifulSoup
 from autocorrect import Speller
 from nltk.corpus import stopwords
 from nltk.tokenize import TweetTokenizer

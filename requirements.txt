@@ -1,26 +1,22 @@
-pandas
-numpy
-seaborn
-ipykernel
-ensure==1.0.2
-emoji
-nltk
-dill
-autocorrect
-advertools
-bs4
-transformers
-scikit-learn
-joblib
-xgboost
-catboost
-Flask
-transformers
-# torch
-tensorflow
-tf-keras
-imbalanced-learn
-optuna
+pandas==0.3.1
+numpy==1.26.4
+seaborn==0.13.2
+ipykernel==6.29.4
+# ensure==1.0.2
+emoji==2.11.1
+nltk==3.8.1
+# dill
+autocorrect==2.6.1
+scikit-learn==1.5.0
+joblib==1.4.2
+xgboost==2.0.3
+catboost==1.2.5
+Flask==3.0.3
+transformers==4.41.0
+tensorflow==2.15.0
+tf-keras==2.16.0
+imbalanced-learn==0.12.2
+optuna==3.6.1
 
 
 # -e .

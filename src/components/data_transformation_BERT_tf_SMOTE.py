@@ -1,5 +1,6 @@
 import os
 import sys
+import numpy as np
 import pandas as pd
 import tensorflow as tf
 
@@ -21,7 +22,6 @@ class DataTransformationConfig:
     output_file_val: str = os.path.join(destination_dir, 'val_data.tfrecord')
     output_file_test: str = os.path.join(destination_dir, 'test_data.tfrecord')
     max_length: int = 128  # Max length for BERT tokenizer
-
 
 
 class DataTransformerTfSMOTE:
@@ -46,7 +46,6 @@ class DataTransformerTfSMOTE:
             log.error("Failed to set up the BERT tokenizer.")
             raise CustomException(e, sys)
     
-    
     def load_data(self):
         try:
             df = pd.read_csv(self.config.source_dir)
@@ -64,7 +63,6 @@ class DataTransformerTfSMOTE:
             log.error("Failed to load data.")
             raise CustomException(e, sys)
 
-
     def split_data(self, df):
         try:
             train_df, temp_df = train_test_split(df, test_size=0.4, random_state=42, stratify=df['target'])  # 60% train, 40% temp
@@ -74,8 +72,7 @@ class DataTransformerTfSMOTE:
         except Exception as e:
             log.error("Failed to split data.")
             raise CustomException(e, sys)
-    
-    
+
     def tokenize_sentences(self, sentences):
         try:
             encoding = self.tokenizer.batch_encode_plus(
@@ -91,33 +88,40 @@ class DataTransformerTfSMOTE:
         except Exception as e:
             log.error("Failed to tokenize sentences.")
             raise CustomException(e, sys)
-    
-    
-    def apply_smote(self, input_ids, targets):
+
+    def apply_smote(self, input_ids, attention_masks, targets):
         try:
             smote = SMOTE(random_state=42)
-            input_ids_resampled, targets_resampled = smote.fit_resample(input_ids, targets)
+            log.info(f"Applying SMOTE: input_ids.shape = {input_ids.shape}, targets.shape = {targets.shape}")
+            combined = np.hstack((input_ids, attention_masks))
+            combined_resampled, targets_resampled = smote.fit_resample(combined, targets)
+            input_ids_resampled = combined_resampled[:, :self.config.max_length]
+            attention_masks_resampled = combined_resampled[:, self.config.max_length:]
             log.info("Applied SMOTE successfully")
-            return input_ids_resampled, targets_resampled
+            return input_ids_resampled, attention_masks_resampled, targets_resampled
         except Exception as e:
             log.error("Failed to apply SMOTE.")
             raise CustomException(e, sys)
-
 
     def transform_data(self, df, apply_smote=False):
         try:
             texts = df['cleanText'].values
             targets = df['target'].values
             input_ids, attention_masks = self.tokenize_sentences(texts)
+            
+            # Ensure input_ids and targets have the same length
+            if len(input_ids) != len(targets):
+                log.error(f"Inconsistent lengths before SMOTE: input_ids has {len(input_ids)} samples, targets has {len(targets)} samples")
+                raise CustomException(f"Inconsistent lengths: input_ids has {len(input_ids)} samples, targets has {len(targets)} samples", sys)
+            
             if apply_smote:
-                input_ids, targets = self.apply_smote(input_ids, targets)
-                attention_masks, _ = self.apply_smote(attention_masks, targets)
+                input_ids, attention_masks, targets = self.apply_smote(input_ids, attention_masks, targets)
+            
             log.info("Data transformation completed")
             return input_ids, attention_masks, targets
         except Exception as e:
             log.error("Failed to transform data.")
             raise CustomException(e, sys)
-
 
     def to_tf_dataset(self, input_ids, attention_masks, targets):
         try:
@@ -127,7 +131,6 @@ class DataTransformerTfSMOTE:
         except Exception as e:
             log.error("Failed to convert data to TF dataset.")
             raise CustomException(e, sys)
-
 
     def _serialize_example(self, input_ids, attention_mask, target):
         try:
@@ -142,7 +145,6 @@ class DataTransformerTfSMOTE:
             log.error("Failed to serialize example.")
             raise CustomException(e, sys)
     
-    
     def _write_tfrecord(self, dataset, filename):
         try:
             with tf.io.TFRecordWriter(filename) as writer:
@@ -153,7 +155,6 @@ class DataTransformerTfSMOTE:
         except Exception as e:
             log.error("Failed to write TFRecord file.")
             raise CustomException(e, sys)
-
 
     def save_tfrecords(self, train_dataset, val_dataset, test_dataset):
         try:
@@ -182,4 +183,3 @@ class DataTransformerTfSMOTE:
         except Exception as e:
             log.error("Data transformation process failed.")
             raise CustomException(e, sys)
-

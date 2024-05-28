@@ -2,8 +2,8 @@ import os
 import numpy as np
 
 from flask import Flask, request, render_template
-from src.pipeline.predict_pipeline_BERT import CustomData, PredictPipeline
-# from src.pipeline.predict_pipeline import CustomData, PredictPipeline
+# from src.pipeline.predict_pipeline_BERT import CustomData, PredictPipeline
+from src.pipeline.predict_pipeline import CustomData, PredictPipeline
 
 
 # Set the environment variable to disable oneDNN custom operations
