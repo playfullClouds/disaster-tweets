@@ -29,28 +29,23 @@ phases:
       - pip install -r requirements.txt
   pre_build:
     commands:
-      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src3398028744/src
+      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src848678696/src  # Adjusted path
   build:
     commands:
-      - echo "Listing contents of /codebuild/output"
-      - ls -R /codebuild/output
-      - echo "Listing contents of /codebuild/output/src3398028744"
-      - ls -R /codebuild/output/src3398028744
-      - echo "Listing contents of /codebuild/output/src3398028744/src"
-      - ls -R /codebuild/output/src3398028744/src
-      - echo "Listing contents of /codebuild/output/src3398028744/src/src"
-      - ls -R /codebuild/output/src3398028744/src/src
+      - echo "Listing contents of /codebuild/output/src848678696/src/src/components"
+      - ls -R /codebuild/output/src848678696/src/src/components
       - echo "Running data ingestion"
-      - python /codebuild/output/src3398028744/src/src/components/data_ingestion.py
+      - python /codebuild/output/src848678696/src/src/components/data_ingestion.py
       - echo "Running data cleaning"
-      - python /codebuild/output/src3398028744/src/src/components/data_cleaning.py
+      - python /codebuild/output/src848678696/src/src/components/data_cleaner.py
       - echo "Running data transformation"
-      - python /codebuild/output/src3398028744/src/src/components/data_transformation_SMOTE.py
+      - python /codebuild/output/src848678696/src/src/components/data_transformation_SMOTE.py
       - echo "Running model training"
-      - python /codebuild/output/src3398028744/src/src/components/model_trainer.py
+      - python /codebuild/output/src848678696/src/src/components/model_trainer.py
       - echo "Running model optimization"
-      - python /codebuild/output/src3398028744/src/src/components/model_optimizer_SMOTE.py
+      - python /codebuild/output/src848678696/src/src/components/model_optimizer_SMOTE.py
 
 artifacts:
   files:
     - '**/*'
+
