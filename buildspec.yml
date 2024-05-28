@@ -6,14 +6,14 @@ phases:
       - pip install -r requirements.txt
   pre_build:
     commands:
-      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src100686156/src  # Adjust this path based on your environment
+      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src100686156/src
   build:
     commands:
-      - python src/components/data_ingestion.py
-      - python src/components/data_cleaning.py
-      - python src/components/data_transformation_SMOTE.py
-      - python src/components/model_trainer.py
-      - python src/components/model_optimizer_SMOTE.py
+      - python /codebuild/output/src100686156/src/src/components/data_ingestion.py
+      - python /codebuild/output/src100686156/src/src/components/data_cleaning.py
+      - python /codebuild/output/src100686156/src/src/components/data_transformation_SMOTE.py
+      - python /codebuild/output/src100686156/src/src/components/model_trainer.py
+      - python /codebuild/output/src100686156/src/src/components/model_optimizer_SMOTE.py
 
 artifacts:
   files:
