@@ -29,18 +29,23 @@ phases:
       - pip install -r requirements.txt
   pre_build:
     commands:
-      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src3398028744/src  # Adjusted path
+      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src3398028744/src/src
   build:
     commands:
+      - echo "Running data ingestion"
+      - ls /codebuild/output/src3398028744/src/src/components
       - python /codebuild/output/src3398028744/src/src/components/data_ingestion.py
+      - echo "Running data cleaning"
       - python /codebuild/output/src3398028744/src/src/components/data_cleaning.py
+      - echo "Running data transformation"
       - python /codebuild/output/src3398028744/src/src/components/data_transformation_SMOTE.py
+      - echo "Running model training"
       - python /codebuild/output/src3398028744/src/src/components/model_trainer.py
+      - echo "Running model optimization"
       - python /codebuild/output/src3398028744/src/src/components/model_optimizer_SMOTE.py
 
 artifacts:
   files:
     - '**/*'
-
 
 
