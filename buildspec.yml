@@ -29,9 +29,13 @@ phases:
       - pip install -r requirements.txt
   pre_build:
     commands:
-      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src2144660740/src/src
-      - echo "Listing contents of /codebuild/output/src2144660740/src/src"
-      - ls -R /codebuild/output/src2144660740/src/src
+      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src2144660740/src
+      - echo "Listing contents of /codebuild/output"
+      - ls -R /codebuild/output
+      - echo "Listing contents of /codebuild/output/src2144660740"
+      - ls -R /codebuild/output/src2144660740
+      - echo "Listing contents of /codebuild/output/src2144660740/src"
+      - ls -R /codebuild/output/src2144660740/src
   build:
     commands:
       - python src/components/data_ingestion.py
@@ -43,5 +47,6 @@ phases:
 artifacts:
   files:
     - '**/*'
+
 
 
