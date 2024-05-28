@@ -2,7 +2,7 @@ pandas==2.2.2
 numpy==1.26.4
 seaborn==0.13.2
 ipykernel==6.29.4
-# ensure==1.0.2
+ensure==1.0.2
 emoji==2.11.1
 nltk==3.8.1
 # dill
