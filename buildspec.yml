@@ -29,11 +29,17 @@ phases:
       - pip install -r requirements.txt
   pre_build:
     commands:
-      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src848678696/src  # Adjusted path
+      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src848678696/src
   build:
     commands:
-      - echo "Listing contents of /codebuild/output/src848678696/src/src/components"
-      - ls -R /codebuild/output/src848678696/src/src/components
+      - echo "Listing contents of /codebuild/output"
+      - ls -R /codebuild/output
+      - echo "Listing contents of /codebuild/output/src848678696"
+      - ls -R /codebuild/output/src848678696
+      - echo "Listing contents of /codebuild/output/src848678696/src"
+      - ls -R /codebuild/output/src848678696/src
+      - echo "Listing contents of /codebuild/output/src848678696/src/src"
+      - ls -R /codebuild/output/src848678696/src/src
       - echo "Running data ingestion"
       - python /codebuild/output/src848678696/src/src/components/data_ingestion.py
       - echo "Running data cleaning"
@@ -48,4 +54,5 @@ phases:
 artifacts:
   files:
     - '**/*'
+
 
