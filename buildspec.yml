@@ -6,11 +6,10 @@ phases:
       - pip install -r requirements.txt
   pre_build:
     commands:
-      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src100686156/src
-      - ls -R /codebuild/output/src100686156/src  # List directory contents for debugging
+      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src
+      - ls -R /codebuild/output  # List the directory contents for debugging
   build:
     commands:
-      - ls -R src/components  # Ensure we are in the correct directory
       - python src/components/data_ingestion.py
       - python src/components/data_cleaning.py
       - python src/components/data_transformation_SMOTE.py
