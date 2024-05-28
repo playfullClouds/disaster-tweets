@@ -7,11 +7,11 @@ phases:
   build:
     commands:
       # - python main.py
-      - python data_ingestion.py
-      - python data_cleaning.py
-      - python data_transformation_SMOTE.py
-      - python model_trainer.py
-      - python model_optimizer_SMOTE.py
+      - python src/components/data_ingestion.py
+      - python src/components/data_cleaning.py
+      - python src/components/data_transformation_SMOTE.py
+      - python src/components/model_trainer.py
+      - python src/components/model_optimizer_SMOTE.py
 
 
 artifacts:
