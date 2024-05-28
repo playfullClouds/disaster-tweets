@@ -34,22 +34,23 @@ phases:
       - export PYTHONPATH=$PYTHONPATH:$PROJECT_DIR/src
   build:
     commands:
-      - echo "Listing contents of $PROJECT_DIR/src/src/components"
-      - ls -R $PROJECT_DIR/src/src/components
+      - echo "Listing contents of $PROJECT_DIR/src/components"
+      - ls -R $PROJECT_DIR/src/components
       - echo "Running data ingestion"
-      - python $PROJECT_DIR/src/src/components/data_ingestion.py
+      - python $PROJECT_DIR/src/components/data_ingestion.py
       - echo "Running data cleaning"
-      - python $PROJECT_DIR/src/src/components/data_cleaner.py
+      - python $PROJECT_DIR/src/components/data_cleaner.py
       - echo "Running data transformation"
-      - python $PROJECT_DIR/src/src/components/data_transformation_SMOTE.py
+      - python $PROJECT_DIR/src/components/data_transformation_SMOTE.py
       - echo "Running model training"
-      - python $PROJECT_DIR/src/src/components/model_trainer.py
+      - python $PROJECT_DIR/src/components/model_trainer.py
       - echo "Running model optimization"
-      - python $PROJECT_DIR/src/src/components/model_optimizer_SMOTE.py
+      - python $PROJECT_DIR/src/components/model_optimizer_SMOTE.py
 
 artifacts:
   files:
     - '**/*'
+
 
 
 
