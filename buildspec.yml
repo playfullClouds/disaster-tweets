@@ -29,23 +29,19 @@ phases:
       - pip install -r requirements.txt
   pre_build:
     commands:
-      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src2144660740/src
-      - echo "Listing contents of /codebuild/output"
-      - ls -R /codebuild/output
-      - echo "Listing contents of /codebuild/output/src2144660740"
-      - ls -R /codebuild/output/src2144660740
-      - echo "Listing contents of /codebuild/output/src2144660740/src"
-      - ls -R /codebuild/output/src2144660740/src
+      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src3398028744/src  # Adjusted path
   build:
     commands:
-      - python src/components/data_ingestion.py
-      - python src/components/data_cleaning.py
-      - python src/components/data_transformation_SMOTE.py
-      - python src/components/model_trainer.py
-      - python src/components/model_optimizer_SMOTE.py
+      - python /codebuild/output/src3398028744/src/src/components/data_ingestion.py
+      - python /codebuild/output/src3398028744/src/src/components/data_cleaning.py
+      - python /codebuild/output/src3398028744/src/src/components/data_transformation_SMOTE.py
+      - python /codebuild/output/src3398028744/src/src/components/model_trainer.py
+      - python /codebuild/output/src3398028744/src/src/components/model_optimizer_SMOTE.py
 
 artifacts:
   files:
+    - '**/*'
+
     - '**/*'
 
 
