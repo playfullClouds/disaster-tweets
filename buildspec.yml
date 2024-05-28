@@ -1,3 +1,26 @@
+# version: 0.2
+
+# phases:
+#   install:
+#     commands:
+#       - pip install -r requirements.txt
+#   pre_build:
+#     commands:
+#       - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src
+#       - ls -R /codebuild/output  # List the directory contents for debugging
+#   build:
+#     commands:
+#       - python src/components/data_ingestion.py
+#       - python src/components/data_cleaning.py
+#       - python src/components/data_transformation_SMOTE.py
+#       - python src/components/model_trainer.py
+#       - python src/components/model_optimizer_SMOTE.py
+
+# artifacts:
+#   files:
+#     - '**/*'
+
+
 version: 0.2
 
 phases:
@@ -6,16 +29,16 @@ phases:
       - pip install -r requirements.txt
   pre_build:
     commands:
-      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src
-      - ls -R /codebuild/output  # List the directory contents for debugging
+      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src2144660740/src
   build:
     commands:
-      - python src/components/data_ingestion.py
-      - python src/components/data_cleaning.py
-      - python src/components/data_transformation_SMOTE.py
-      - python src/components/model_trainer.py
-      - python src/components/model_optimizer_SMOTE.py
+      - python /codebuild/output/src2144660740/src/src/components/data_ingestion.py
+      - python /codebuild/output/src2144660740/src/src/components/data_cleaning.py
+      - python /codebuild/output/src2144660740/src/src/components/data_transformation_SMOTE.py
+      - python /codebuild/output/src2144660740/src/src/components/model_trainer.py
+      - python /codebuild/output/src2144660740/src/src/components/model_optimizer_SMOTE.py
 
 artifacts:
   files:
     - '**/*'
+
