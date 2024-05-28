@@ -13,7 +13,7 @@ xgboost==2.0.3
 catboost==1.2.5
 Flask==3.0.3
 transformers==4.41.0
-tensorflow==2.15.0
+tensorflow==2.16.1
 tf-keras==2.16.0
 imbalanced-learn==0.12.2
 optuna==3.6.1
