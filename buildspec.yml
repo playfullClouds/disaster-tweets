@@ -4,6 +4,10 @@ phases:
   install:
     commands:
       - pip install -r requirements.txt
+  pre_build:
+    commands:
+      - export PYTHONPATH=$PYTHONPATH:/codebuild/output/src11152915/src  # Adjust this path based on your environment
+  build:    
   build:
     commands:
       # - python main.py
