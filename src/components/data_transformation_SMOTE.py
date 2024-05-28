@@ -1,4 +1,5 @@
 import os
+import gc
 import sys
 import joblib
 import pandas as pd
@@ -152,7 +153,21 @@ class DataTransformerSMOTE:
     def transform_data(self) -> None:
         """Complete the data transformation process."""
         log.info("Starting data transformation")
+        
         try:
+            
+            # Check if the required files already exist
+            required_files = [
+                os.path.join(self.config.destination_dir, self.config.train_data),
+                os.path.join(self.config.destination_dir, self.config.test_data),
+                os.path.join(self.config.destination_dir, self.config.val_data),
+                self.config.vectorizer_path
+            ]
+            
+            if all(os.path.exists(file) for file in required_files):
+                log.info("Transformed data and vectorizer already exist. Skipping data transformation.")
+                return
+            
             # Load cleaned data
             df = self.load_cleaned_data()
 
@@ -173,3 +188,26 @@ class DataTransformerSMOTE:
         except Exception as e:
             log.error("Error occurred during data transformation process")
             raise CustomException(e, sys)
+        
+        finally:
+            # Release memory
+            gc.collect()
+        
+        
+        
+        
+# if __name__ == "__main__":
+#     transformer = DataTransformerSMOTE()
+#     transformer.transform_data()
+    
+    
+STAGE_NAME = "Data Transformation SMOTE"
+try:
+   log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
+   transformer = DataTransformerSMOTE()
+   transformer.transform_data()
+   log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+except Exception as e:
+        log.exception(f"Exception occurred during {STAGE_NAME}")
+        raise CustomException(e, sys)
+    

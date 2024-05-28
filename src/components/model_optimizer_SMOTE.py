@@ -260,6 +260,13 @@ class ModelOptimizerSMOTE:
         log.info("Running the model optimization and evaluation pipeline...")
 
         try:
+            
+            # Check if the best model file already exists
+            if os.path.exists(self.config.optimized_model_path):
+                log.info("Optimized model already exists. Skipping model training.")
+                return
+            
+            
             # Load training, validation, and test data
             X_train, y_train = self.load_data(self.config.train_data_dir)
             X_val, y_val = self.load_data(self.config.val_data_dir)
@@ -305,3 +312,22 @@ class ModelOptimizerSMOTE:
         except Exception as e:
             log.error("Error occurred during the model optimization and evaluation pipeline")
             raise CustomException(e, sys)
+        
+        
+        
+        
+# if __name__ == "__main__":
+#     optimizer = ModelOptimizerSMOTE()
+#     optimizer.run()
+    
+    
+
+STAGE_NAME = "Model Optimization"
+try:
+   log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
+   optimizer = ModelOptimizerSMOTE()
+   optimizer.run()
+   log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+except Exception as e:
+        log.exception(f"Exception occurred during {STAGE_NAME}")
+        raise CustomException(e, sys)

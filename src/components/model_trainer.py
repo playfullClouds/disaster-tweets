@@ -1,4 +1,5 @@
 import os
+import gc
 import sys
 import joblib
 import pandas as pd
@@ -72,6 +73,12 @@ class ModelTrainer:
         log.info("Model training and evaluation starting...")
 
         try:
+            
+            # Check if the best model file already exists
+            if os.path.exists(self.config.best_model_path):
+                log.info("Best model already exists. Skipping model training.")
+                return
+            
             # Load training, validation, and test data
             X_train, y_train = self.load_data(self.config.train_data)
             X_val, y_val = self.load_data(self.config.val_data)
@@ -179,3 +186,28 @@ class ModelTrainer:
         except Exception as e:
             log.error(f"Error during model training and evaluation")
             raise CustomException(e, sys)
+        finally:
+            # Release memory
+            del X_train, y_train, X_val, y_val, X_test, y_test
+            gc.collect()
+
+        
+        
+
+# if __name__ == "__main__":
+#     trainer = ModelTrainer()
+#     trainer.cross_validation_and_test()
+    
+    
+    
+    
+STAGE_NAME = "Model Training"
+try:
+   log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
+   trainer = ModelTrainer()
+   trainer.cross_validation_and_test()
+   log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+except Exception as e:
+        log.exception(f"Exception occurred during {STAGE_NAME}")
+        raise CustomException(e, sys)
+    

@@ -6,7 +6,13 @@ phases:
       - pip install -r requirements.txt
   build:
     commands:
-      - python main.py
+      # - python main.py
+      - python data_ingestion.py
+      - python data_cleaning.py
+      - python data_transformation_SMOTE.py
+      - python model_trainer.py
+      - python model_optimizer_SMOTE.py
+
 
 artifacts:
   files:

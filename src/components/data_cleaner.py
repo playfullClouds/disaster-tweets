@@ -1,4 +1,5 @@
 import re
+import gc
 import os
 import sys
 import nltk
@@ -131,8 +132,17 @@ class DataCleaner:
         """Cleans an input file and writes the cleaned text to an output file."""
         log.info("Main cleaning starting")
         try:
-            input_filepath = os.path.join(self.config.source_dir, self.config.input_file)
+            
             output_filepath = os.path.join(self.config.destination_dir, self.config.output_file)
+            
+            
+            # Check if the cleaned data file already exists
+            if os.path.exists(output_filepath):
+                log.info(f"Cleaned data file {output_filepath} already exists. Skipping data cleaning.")
+                return
+            
+            input_filepath = os.path.join(self.config.source_dir, self.config.input_file)
+            
             
             df = pd.read_csv(input_filepath)
             log.info(f"Loaded data from {input_filepath}")
@@ -164,6 +174,11 @@ class DataCleaner:
             df.to_csv(output_filepath, index=False)
             log.info(f"Cleaned data written to {output_filepath}")
             
+            
+            # Release memory
+            del df
+            gc.collect()
+            
             log.info("Main cleaning successful.")
                     
         except Exception as e:
@@ -172,6 +187,26 @@ class DataCleaner:
     
     
     
+    
+# if __name__ == "__main__":
+#     cleaner = DataCleaner()
+#     cleaner.clean_file()
+    
+
+STAGE_NAME = "Data Cleaning"
+try:
+   log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
+   cleaner = DataCleaner()
+   cleaner.clean_file()
+   log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+except Exception as e:
+        log.exception(f"Exception occurred during {STAGE_NAME}")
+        raise CustomException(e, sys)    
+
+
+
+
+
 
 
 # stk = stopwords.words('english')

@@ -128,3 +128,24 @@ class DataIngestion:
         except Exception as e: # Catch exceptions
             raise CustomException(e, sys) # Raise CustomException with the caught exception and sys module
         
+
+
+
+# if __name__ == "__main__":
+#     ingestion = DataIngestion()
+#     ingestion.initiate_ingestion()
+    
+    
+    
+    
+STAGE_NAME = "Data Ingestion"
+try:
+   log.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
+   ingestion = DataIngestion()
+   extracted_dir = ingestion.initiate_ingestion()
+#    ingestion.execute_data_ingestion()
+   log.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+except Exception as e:
+        log.exception(f"Exception occurred during {STAGE_NAME}")
+        raise CustomException(e, sys)
+    
