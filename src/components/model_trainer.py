@@ -188,7 +188,18 @@ class ModelTrainer:
             raise CustomException(e, sys)
         finally:
             # Release memory
-            del X_train, y_train, X_val, y_val, X_test, y_test
+            if 'X_train' in locals():
+                del X_train
+            if 'y_train' in locals():
+                del y_train
+            if 'X_val' in locals():
+                del X_val
+            if 'y_val' in locals():
+                del y_val
+            if 'X_test' in locals():
+                del X_test
+            if 'y_test' in locals():
+                del y_test
             gc.collect()
 
         
