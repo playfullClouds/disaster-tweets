@@ -7,7 +7,7 @@ import pandas as pd
 
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import cross_val_score, cross_validate
+from sklearn.model_selection import cross_validate
 
 # from sklearn.svm import SVC
 from xgboost import XGBClassifier
