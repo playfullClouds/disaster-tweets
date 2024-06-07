@@ -167,8 +167,7 @@ cython_debug/
 # artifacts/*
 
 
-
- 
+research/dataset
 
 # artifacts/model_optimizer/optuna_model/tf_model.h5
 artifacts/model_optimizer/optuna_model/tf_model.h5
