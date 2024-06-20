@@ -28,5 +28,8 @@ logging.basicConfig(
 log = logging.getLogger(project_root)
 log.setLevel(logging.INFO)  
 
+# Suppress matplotlib debug messages
+logging.getLogger('matplotlib').setLevel(logging.WARNING)
+
 if __name__ == '__main__':
     log.info("Logging has started")

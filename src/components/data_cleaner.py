@@ -97,15 +97,22 @@ class DataCleaner:
             sentence=str(sentence) #convert to strings series
             sentence = sentence.lower()  # lowercase everything 
             sentence = self.extract_and_remove_emojis(sentence)  # Remove emojis
-            sentence = sentence.encode('ascii', 'ignore').decode() #encode ASCII characters
-            sentence = re.sub(r'^rt[\s]+', '', sentence) # Remove "RT" (retweet abbreviation)
-            sentence = re.sub(r'@\w+', '', sentence) # Remove mentions (@username)
-            sentence = re.sub(r'https?://\S+', '', sentence) # Remove URLs
-            sentence = re.sub(r'\[.*?\]', '', sentence) # remove square brackets
-            sentence = re.sub(r'<.*?>+', '', sentence) # remove angular brackets
-            sentence = re.sub(r'\d+', '', sentence) #remove numbers
-            sentence = re.sub(r'\w*\d\w*', '', sentence) #remove words containing numbers
-            sentence = sentence.strip() # remove leading and trailing white spaces
+            
+            # Remove unwanted characters and patterns
+            sentence = re.sub(r'^rt[\s]+', '', sentence)  # Remove "RT" (retweet abbreviation)
+            sentence = re.sub(r'@\w+', '', sentence)  # Remove mentions (@username)
+            sentence = re.sub(r'https?://\S+', '', sentence)  # Remove URLs
+            # sentence = re.sub(r'\[.*?\]', '', sentence)  # Remove content within square brackets
+            # sentence = re.sub(r'<.*?>+', '', sentence)  # Remove content within angular brackets
+            # sentence = re.sub(r'\(.*?\)', '', sentence)  # Remove content within parentheses
+            sentence = re.sub(r'[\[\]]', '', sentence)  # Remove square brackets
+            sentence = re.sub(r'[<>]', '', sentence)  # Remove angular brackets
+            sentence = re.sub(r'[\(\)]', '', sentence)  # Remove parentheses
+            sentence = re.sub(r'\d+', '', sentence)  # Remove numbers
+            sentence = re.sub(r'\w*\d\w*', '', sentence)  # Remove words containing numbers
+            sentence = re.sub(r'[:;,.!?#&"\']', '', sentence)  # Remove punctuation (you can add more if needed)
+            sentence = re.sub(r'\s+', ' ', sentence)  # Replace multiple spaces with a single space
+            sentence = sentence.strip()  # Remove leading and trailing white spaces
 
 
             # correct sentence and filter out word with two letter or less

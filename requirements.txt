@@ -19,6 +19,9 @@ tf-keras==2.16.0
 # imbalanced-learn==0.12.2
 imbalanced-learn==0.10.0
 optuna==3.6.1
+wordcloud
+tabulate
+
 
 
 # -e .

@@ -37,6 +37,7 @@ class DataTransformerSMOTE:
             os.makedirs(self.config.destination_dir, exist_ok=True)
             log.info(f"Created directory {self.config.destination_dir}")
             self.vectorizer = TfidfVectorizer(
+                max_features=1000,
                 sublinear_tf=True,
                 min_df=10,
                 norm='l2',
