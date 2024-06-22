@@ -19,15 +19,16 @@ class PredictPipeline:
         
         # self.model_path = os.path.join(BASE_DIR, 'artifacts', 'model_trainer', 'best_model_SMOTE.pkl')
         self.preprocessor_path = os.path.join(BASE_DIR, 'artifacts', 'data_transformation', 'tfidf_vectorizer_SMOTE.pkl')
-        
+        self.scaler_path = os.path.join(BASE_DIR, 'artifacts', 'data_transformation', 'scaler_SMOTE.pkl')
         
     def predict(self, text_data):
-        log.info("Loading model and vectorizer.")
+        log.info("Loading model, vectorizer, and scaler.")
         
         try:
             # Load the trained model and TfidfVectorizer object
             model = load_object(file_path=self.model_path)
             preprocessor = load_object(file_path=self.preprocessor_path)
+            scaler = load_object(file_path=self.scaler_path)
             
             # Ensure text_data is in the expected format (e.g., a string)
             if isinstance(text_data, str):
@@ -38,10 +39,13 @@ class PredictPipeline:
             # Transform the input text data
             data_transformed = preprocessor.transform(text_data)
             
+            # Scale the transformed text data
+            data_scaled = scaler.transform(data_transformed.toarray())
+            
             log.info("Making predictions.")
             
             # Predict using the trained model
-            preds = model.predict(data_transformed)
+            preds = model.predict(data_scaled)
             log.info("Predictions successfully made.")
             return preds
             

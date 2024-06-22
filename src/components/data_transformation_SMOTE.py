@@ -6,6 +6,7 @@ import pandas as pd
 
 
 from imblearn.over_sampling import SMOTE
+from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 
@@ -24,6 +25,7 @@ class DataTransformationConfig:
     test_data: str = field(default='test_SMOTE.csv')
     val_data: str = field(default='val_SMOTE.csv')
     vectorizer_path: str = os.path.join(destination_dir, 'tfidf_vectorizer_SMOTE.pkl')
+    scaler_path: str = os.path.join(destination_dir, 'scaler_SMOTE.pkl')
     
     
 
@@ -44,6 +46,7 @@ class DataTransformerSMOTE:
                 ngram_range=(1, 2),
                 stop_words='english'
             )
+            self.scaler = StandardScaler()
             log.info("DataTransformer initialized successfully")
         except Exception as e:
             log.error("Failed to initialize DataTransformer")
@@ -112,17 +115,22 @@ class DataTransformerSMOTE:
             X_train = self.fit_transform_vectorizer(train_set['cleanText'])
             X_val = self.transform_vectorizer(val_set['cleanText'])
             X_test = self.transform_vectorizer(test_set['cleanText'])
+            
+            # Scale the vectorized data
+            X_train_scaled = self.scaler.fit_transform(X_train.toarray())
+            X_val_scaled = self.scaler.transform(X_val.toarray())
+            X_test_scaled = self.scaler.transform(X_test.toarray())
 
-            # Apply SMOTE to the vectorized training data
+            # Apply SMOTE to the scaled training data
             smote = SMOTE(random_state=42)
-            X_train_smote, y_train_smote = smote.fit_resample(X_train, y_train)
+            X_train_smote, y_train_smote = smote.fit_resample(X_train_scaled, y_train)
 
             # Combine transformed text data and encoded labels into a single DataFrame
-            train_transformed_df = pd.DataFrame(X_train_smote.toarray())
+            train_transformed_df = pd.DataFrame(X_train_smote)
             train_transformed_df['target'] = y_train_smote
-            val_transformed_df = pd.DataFrame(X_val.toarray())
+            val_transformed_df = pd.DataFrame(X_val_scaled)
             val_transformed_df['target'] = y_val.values
-            test_transformed_df = pd.DataFrame(X_test.toarray())
+            test_transformed_df = pd.DataFrame(X_test_scaled)
             test_transformed_df['target'] = y_test.values
 
             # Save the datasets
@@ -149,6 +157,17 @@ class DataTransformerSMOTE:
         except Exception as e:
             log.error(f"Error saving TF-IDF vectorizer to {self.config.vectorizer_path}")
             raise CustomException(e, sys)
+      
+      
+    def save_scaler(self):
+        """Save the StandardScaler object to disk."""
+        log.info(f"Saving scaler to {self.config.scaler_path}")
+        try:
+            joblib.dump(self.scaler, self.config.scaler_path)
+            log.info("Scaler saved successfully")
+        except Exception as e:
+            log.error(f"Error saving scaler to {self.config.scaler_path}")
+            raise CustomException(e, sys)  
 
 
     def transform_data(self) -> None:
@@ -158,16 +177,16 @@ class DataTransformerSMOTE:
         try:
             
             # Check if the required files already exist
-            required_files = [
-                os.path.join(self.config.destination_dir, self.config.train_data),
-                os.path.join(self.config.destination_dir, self.config.test_data),
-                os.path.join(self.config.destination_dir, self.config.val_data),
-                self.config.vectorizer_path
-            ]
+            # required_files = [
+            #     os.path.join(self.config.destination_dir, self.config.train_data),
+            #     os.path.join(self.config.destination_dir, self.config.test_data),
+            #     os.path.join(self.config.destination_dir, self.config.val_data),
+            #     self.config.vectorizer_path
+            # ]
             
-            if all(os.path.exists(file) for file in required_files):
-                log.info("Transformed data and vectorizer already exist. Skipping data transformation.")
-                return
+            # if all(os.path.exists(file) for file in required_files):
+            #     log.info("Transformed data and vectorizer already exist. Skipping data transformation.")
+            #     return
             
             # Load cleaned data
             df = self.load_cleaned_data()
@@ -178,12 +197,14 @@ class DataTransformerSMOTE:
 
             # Encode labels
             y = self.encode_labels(labels)
+        
 
             # Split and save data into train, validation, and test sets
             self.split_and_save_data(X, y)
 
-            # Save the vectorizer for later use
+            # Save the vectorizer and scaler for later use
             self.save_vectorizer()
+            self.save_scaler()
 
             log.info("Data transformation process completed successfully")
         except Exception as e:

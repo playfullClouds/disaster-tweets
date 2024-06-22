@@ -3,7 +3,7 @@ import sys
 import joblib
 import pandas as pd
 
-
+from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 
@@ -22,6 +22,7 @@ class DataTransformationConfig:
     test_data: str = field(default='test.csv')
     val_data: str = field(default='val.csv')
     vectorizer_path: str = os.path.join(destination_dir, 'tfidf_vectorizer.pkl')
+    scaler_path: str = os.path.join(destination_dir, 'scaler.pkl')
     
     
 class DataTransformer:
@@ -41,6 +42,7 @@ class DataTransformer:
                 ngram_range=(1, 2),
                 stop_words='english'
             )
+            self.scaler = StandardScaler()
             log.info("DataTransformer initialized successfully")
         except Exception as e:
             log.error("Failed to initialize DataTransformer")
@@ -68,6 +70,18 @@ class DataTransformer:
             return vectorized_data
         except Exception as e:
             log.error("Error during TF_IDF vectorization")
+            raise CustomException(e, sys)
+        
+    
+    def transform_vectorizer(self, texts):
+        """Transform the texts using the pre-fitted TF-IDF vectorizer."""
+        log.info("Transforming texts using the pre-fitted TF-IDF vectorizer")
+        try:
+            vectorized_data = self.vectorizer.transform(texts)
+            log.info("Texts transformed successfully")
+            return vectorized_data
+        except Exception as e:
+            log.error("Error during text transformation")
             raise CustomException(e, sys)
     
     
@@ -116,6 +130,17 @@ class DataTransformer:
         except Exception as e:
             log.error(f"Error saving TF-IDF vectorizer to {self.config.vectorizer_path}")
             raise CustomException(e)
+        
+    
+    def save_scaler(self):
+        """Save the StandardScaler object to disk."""
+        log.info(f"Saving scaler to {self.config.scaler_path}")
+        try:
+            joblib.dump(self.scaler, self.config.scaler_path)
+            log.info("Scaler saved successfully")
+        except Exception as e:
+            log.error(f"Error saving scaler to {self.config.scaler_path}")
+            raise CustomException(e)
 
 
     def transform_data(self) -> None:
@@ -131,17 +156,24 @@ class DataTransformer:
 
             # Transform text data using TF-IDF and encode labels
             X = self.fit_transform_vectorizer(texts)
+            # Scale the features
+            X_scaled = self.scaler.fit_transform(X.toarray())
+            
+            
+            # Encode the labels
             y = self.encode_labels(labels)
-
+            
+            
             # Combine transformed text data and encoded labels into a single DataFrame
-            transformed_df = pd.DataFrame(X.toarray())
+            transformed_df = pd.DataFrame(X_scaled)
             transformed_df['target'] = y
 
             # Split and save data into train, validation, and test sets
             self.split_and_save_data(transformed_df)
 
-            # Save the vectorizer for later use
+            # Save the vectorizer and scaler for later use
             self.save_vectorizer()
+            self.save_scaler()
 
             log.info("Data transformation process completed successfully")
         except Exception as e:
